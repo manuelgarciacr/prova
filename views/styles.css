@@ -7,13 +7,16 @@ h1{
 	padding: 5% 0;
 }
 
+table {
+
+}
 .is-invalid input{
 	display: inline-block!important;
 	border-color: red;
 }
 
 .is-invalid p{
-	display: inline-block!important;
+	visibility: visible!important;
 	border-color: red;
 	color: red;
 }

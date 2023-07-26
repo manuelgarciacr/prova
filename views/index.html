@@ -11,52 +11,59 @@
 <body>
     <div id="allbody" class="container">
         <div class="row vh-sm-100">
-            <h1>Tiendas</h1>
-            <form id="id-shop-form">
-                <div>
-                    <label for="id-shop-name" class="col-4">Nombre:</label>
-                    <input id="id-shop-name" type="text">
-                    <p class="d-none">El nombre debe tener al menos 5 caracteres</p>
+            <form id="id-shop-form" novalidate>
+                <h1>Tienda</h1>
+                <div class="row mx-3 col-lg-offset-3">
+                    <label for="id-shop-name" class="col-12 col-sm-6 col-lg-4">Nombre:</label>
+                    <input id="id-shop-name" type="text" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">El nombre debe tener al menos 5 caracteres</p>
                 </div>
-                <div>
-                    <label for="id-shop-description" class="col-4">Descripción:</label>
-                    <input id="id-shop-description" type="text">
-                    <p class="d-none">La descripción debe tener al menos 5 caracteres</p>
+                <div class="row mx-3">
+                    <label for="id-shop-description" class="col-12 col-sm-6 col-lg-4">Descripción:</label>
+                    <input id="id-shop-description" type="text" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">La descripción debe tener al menos 5 caracteres</p>
                 </div>
-                <div>
-                    <label for="id-shop-max-price" class="col-4">Precio máximo:</label>
-                    <input id="id-shop-max-price" type="number">
-                    <p class="d-none">El precio máximo debe se al menos de 10€</p>
+                <div class="row mx-3">
+                    <label for="id-shop-max-price" class="col-12 col-sm-6 col-lg-4">Precio máximo:</label>
+                    <input id="id-shop-max-price" type="number" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">El precio máximo debe se al menos de 10€</p>
                 </div>
-                <button id="id-shop-submit" class="btn btn-primary" type="submit">Añadir</button>
+                <button id="id-shop-submit" class="btn btn-primary float-end mt-3" type="submit">Añadir tienda</button>
             </form>
-            <form id="id-product-form" class="d-none">
+            <form id="id-product-form" class="hide" novalidate>
                 <h1>Productos</h1>
-                <div>
-                    <label for="id-product-name" class="col-4">Nombre Producto:</label>
-                    <input id="id-product-name" type="text">
-                    <p class="d-none">El nombre debe tener al menos 5 caracteres</p>
+                <div class="row mx-3">
+                    <label for="id-product-name" class="col-12 col-sm-6 col-lg-4">Nombre:</label>
+                    <input id="id-product-name" type="text" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">El nombre debe tener al menos 5 caracteres</p>
                 </div>
-                <div>
-                    <label for="id-product-description" class="col-4">Descripción:</label>
-                    <input id="id-product-description" type="text">
-                    <p class="d-none">La descripción debe tener al menos 5 caracteres</p>
+                <div class="row mx-3">
+                    <label for="id-product-description" class="col-12 col-sm-6 col-lg-4">Descripción:</label>
+                    <input id="id-product-description" type="text" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">La descripción debe tener al menos 5 caracteres</p>
                 </div>
-                <div>
-                    <label for="id-product-price" class="col-4">Precio:</label>
-                    <input id="id-product-price" type="number">
-                    <p class="d-none">El precio debe se al menos de</p>
+                <div class="row mx-3">
+                    <label for="id-product-price" class="col-12 col-sm-6 col-lg-4">Precio:</label>
+                    <input id="id-product-price" type="number" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">El precio debe se al menos de</p>
                 </div>
-                <div>
-                    <label for="id-product-stock" class="col-4">Stock:</label>
-                    <input id="id-product-stock" type="number">
+                <div class="row mx-3">
+                    <label for="id-product-stock" class="col-12 col-sm-6 col-lg-4">Stock:</label>
+                    <input id="id-product-stock" type="number" class="col-12 col-sm-6 col-lg-8">
+                    <p class="invisible col-12 text-end">El stock no puede ser negativo</p>
                 </div>
-                <button id="id-product-submit" class="btn btn-primary" type="submit">Añadir</button>
-                <button id="id-finalizar-submit" class="btn btn-secondary " type="submit">Finalizar</button>
+                <button id="id-product-submit" class="btn btn-primary float-end ms-3" type="submit">Añadir producto</button>
+                <button id="id-finalizar-submit" class="btn btn-secondary float-end" type="submit">Añadir tienda</button>
             </form>
-            <div id="id-products" class="d-none row mt-3"><h2 class="text-center ">Products</h2><br>
+            <div id="id-products" class="hide row mt-3"><h2 class="text-center ">Products</h2><br>
                 <div></div>
-
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered hide">
+                    <thead><tr><th  scope="col" colspan="5" class="text-center border-bottom border-3">Tienda</th></tr></thead>
+                    <tbody><tr><td colspan="5"></td></tr></tbody>
+                    <tbody><tr><td colspan="5"></td></tr></tbody>
+                </table>
             </div>
         </div>
 

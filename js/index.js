@@ -1,38 +1,52 @@
-//(function () {
 'use strict';
 let shop;
 const shopForm = document.getElementById("id-shop-form");
 const btnShopSubmit = document.getElementById("id-shop-submit");
 const shopName = document.getElementById("id-shop-name");
-const description = document.getElementById("id-shop-description");
-const maxPrice = document.getElementById("id-shop-max-price");
+const shopDesc = document.getElementById("id-shop-description");
+const shopMaxPrice = document.getElementById("id-shop-max-price");
 const productForm = document.getElementById("id-product-form");
 const btnProductSubmit = document.getElementById("id-product-submit");
 const productName = document.getElementById("id-product-name");
-const productDescription = document.getElementById("id-product-description");
+const productDesc = document.getElementById("id-product-description");
 const productPrice = document.getElementById("id-product-price");
 const productStock = document.getElementById("id-product-stock");
 const btnFinalizar = document.getElementById("id-finalizar-submit");
 const products = document.getElementById("id-products");
+const table = document.getElementsByTagName("table")[0];
+const tbody = table.getElementsByTagName("tbody")[0];
 const validation = () => {
+    const name = shopName.value;
+    const desc = shopDesc.value;
+    const maxPrice = parseFloat(shopMaxPrice.value);
     shopName.parentElement.classList.remove('is-invalid');
-    description.parentElement.classList.remove('is-invalid');
-    maxPrice.parentElement.classList.remove('is-invalid');
-    if (shopName.value.length < 5)
+    shopDesc.parentElement.classList.remove('is-invalid');
+    shopMaxPrice.parentElement.classList.remove('is-invalid');
+    if (name.length < 5)
         shopName.parentElement.classList.add('is-invalid');
-    if (description.value.length < 5)
-        description.parentElement.classList.add('is-invalid');
-    if (maxPrice.value < 10)
-        maxPrice.parentElement.classList.add('is-invalid');
+    if (desc.length < 5)
+        shopDesc.parentElement.classList.add('is-invalid');
+    if (maxPrice < 10 || isNaN(maxPrice))
+        shopMaxPrice.parentElement.classList.add('is-invalid');
     const errors = document.querySelector("#id-shop-form .is-invalid");
-    const setted = shopName.value.length && description.value.length && maxPrice.value;
-    if (errors == null && setted) {
-        shopName.disabled = true;
-        description.disabled = true;
-        maxPrice.disabled = true;
-        btnShopSubmit === null || btnShopSubmit === void 0 ? void 0 : btnShopSubmit.classList.add("hide");
-        productForm.classList.remove("d-none");
-        shop = new Shop(shopName.value, description.value, maxPrice.value);
+    if (errors == null) {
+        shopForm.classList.add("hide");
+        productForm.classList.remove("hide");
+        shop = new Shop(name, desc, maxPrice);
+        const row = tbody.insertRow(1);
+        row.append(document.createElement("th"));
+        const nameCell = row.insertCell();
+        const descCell = row.insertCell();
+        const maxPriceCell = row.insertCell();
+        const deleteCell = row.insertCell();
+        const btnDelete = document.createElement("button");
+        btnDelete.innerText = "-";
+        btnDelete.classList.add("bg-danger");
+        nameCell.innerText = shop.name;
+        descCell.innerText = shop.description;
+        maxPriceCell.innerText = "Precio máximo: " + shop.maxPrice.toString() + "€";
+        productForm.classList.remove("hide");
+        table.classList.remove("hide");
     }
 };
 // Disable submit event
@@ -40,29 +54,95 @@ shopForm.addEventListener('submit', function (event) {
     event.preventDefault();
     event.stopPropagation();
 }, false);
+const repaintProducts = () => {
+    while (table.rows.length > 4)
+        table.deleteRow(3);
+    shop.products.forEach((v, i) => {
+        const row = tbody.insertRow();
+        const th = document.createElement("th");
+        th.innerText = shop.products.length.toString();
+        row.append(th);
+        const nameCell = row.insertCell();
+        const descCell = row.insertCell();
+        const priceCell = row.insertCell();
+        const stockCell = row.insertCell();
+        const deleteCell = row.insertCell();
+        const btnDelete = document.createElement("button");
+        btnDelete.innerText = "-";
+        btnDelete.classList.add("bg-danger");
+        btnDelete.dataset.index = i.toString();
+        btnDelete.addEventListener("click", (ev) => {
+            const element = ev.target;
+            const index = parseInt(element.dataset.index);
+            shop.products.splice(index, 1);
+            repaintProducts();
+        });
+        deleteCell.append(btnDelete);
+        nameCell.innerText = v.name;
+        descCell.innerText = v.description;
+        priceCell.innerText = "Precio: " + v.price.toString() + "€";
+        stockCell.innerText = "Stock: " + v.stock.toString();
+    });
+};
 const productValidation = () => {
+    const name = productName.value;
+    const desc = productDesc.value;
+    const price = parseFloat(productPrice.value);
+    let stock = parseFloat(productStock.value);
+    if (isNaN(stock))
+        stock = 0;
     productName.parentElement.classList.remove('is-invalid');
-    productDescription.parentElement.classList.remove('is-invalid');
+    productDesc.parentElement.classList.remove('is-invalid');
     productPrice.parentElement.classList.remove('is-invalid');
-    if (productName.value.length < 5)
+    productStock.parentElement.classList.remove('is-invalid');
+    if (name.length < 5)
         productName.parentElement.classList.add('is-invalid');
-    if (productDescription.value.length < 5)
-        productDescription.parentElement.classList.add('is-invalid');
-    const preu = parseFloat(productPrice.value);
-    if (preu > shop.maxPrice) {
+    if (desc.length < 5)
+        productDesc.parentElement.classList.add('is-invalid');
+    if (price > shop.maxPrice) {
         const msg = productPrice.parentElement.getElementsByTagName("p")[0];
-        msg.innerText = "El precio debe ser máximo de " + shop.maxPrice;
+        msg.innerText = "El precio no debe ser mayor que " + shop.maxPrice;
         productPrice.parentElement.classList.add('is-invalid');
     }
+    if (price <= 0 || isNaN(price)) {
+        const msg = productPrice.parentElement.getElementsByTagName("p")[0];
+        msg.innerText = "El precio debe ser mayor que 0";
+        productPrice.parentElement.classList.add('is-invalid');
+    }
+    if (stock < 0)
+        productStock.parentElement.classList.add('is-invalid');
     const errors = document.querySelector("#id-product-form .is-invalid");
-    const setted = productName.value.length && productDescription.value.length && productPrice.value;
-    if (errors == null && setted) {
-        const product = new Product(productName.value, productDescription.value, productPrice.value, productStock.value);
+    if (errors == null) {
+        const product = new Product(name, desc, price, stock);
         shop.addProduct(product);
         productName.value = "";
-        productDescription.value = "";
+        productDesc.value = "";
         productPrice.value = "";
         productStock.value = "";
+        const row = tbody.insertRow();
+        const th = document.createElement("th");
+        th.innerText = shop.products.length.toString();
+        row.append(th);
+        const nameCell = row.insertCell();
+        const descCell = row.insertCell();
+        const priceCell = row.insertCell();
+        const stockCell = row.insertCell();
+        const deleteCell = row.insertCell();
+        const btnDelete = document.createElement("button");
+        btnDelete.innerText = "-";
+        btnDelete.classList.add("bg-danger");
+        btnDelete.dataset.index = (shop.products.length - 1).toString();
+        btnDelete.addEventListener("click", (ev) => {
+            const element = ev.target;
+            const index = parseInt(element.dataset.index);
+            shop.products.splice(index, 1);
+            repaintProducts();
+        });
+        deleteCell.append(btnDelete);
+        nameCell.innerText = name;
+        descCell.innerText = desc;
+        priceCell.innerText = "Precio: " + price.toString() + "€";
+        stockCell.innerText = "Stock: " + stock.toString();
     }
 };
 // Disable submit event
@@ -77,17 +157,17 @@ btnProductSubmit.addEventListener("click", () => {
     productValidation();
 });
 btnFinalizar.addEventListener("click", () => {
-    btnProductSubmit.classList.add("hide");
+    shopName.value = "";
+    shopDesc.value = "";
+    shopMaxPrice.value = "";
+    productName.value = "";
+    productDesc.value = "";
+    productPrice.value = "";
+    productStock.value = "";
+    while (table.rows.length > 4)
+        table.deleteRow(3); // Products
+    table.deleteRow(2); // Shop
+    shopForm.classList.remove("hide");
     productForm.classList.add("hide");
-    products.classList.remove("d-none");
-    const productsDiv = products === null || products === void 0 ? void 0 : products.getElementsByTagName("div")[0];
-    shop.products.forEach(v => {
-        const div = document.createElement("div");
-        const span = document.createElement("span");
-        productsDiv.innerHTML = productsDiv.innerHTML
-            + "<div class='row'><span class='col-3'>" + v.name + "</span>"
-            + "<span class='col-3'>" + v.description + "</span>"
-            + "<span class='col-3'>" + v.price + "</span>"
-            + "<span class='col-3'>" + v.stock + "</span></div>";
-    });
+    table.classList.add("hide");
 });
