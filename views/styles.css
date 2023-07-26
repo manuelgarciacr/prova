@@ -1,0 +1,23 @@
+#allbody{
+	padding-top: 5%;
+}
+
+h1{
+	text-align: center;
+	padding: 5% 0;
+}
+
+.is-invalid input{
+	display: inline-block!important;
+	border-color: red;
+}
+
+.is-invalid p{
+	display: inline-block!important;
+	border-color: red;
+	color: red;
+}
+
+.hide {
+	display: none!important;
+}
